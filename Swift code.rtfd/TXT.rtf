@@ -1,0 +1,1420 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2638
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Bold;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 HelveticaNeue;
+\f3\fnil\fcharset0 HelveticaNeue-Italic;}
+{\colortbl;\red255\green255\blue255;\red155\green35\blue147;\red255\green255\blue255;\red0\green0\blue0;
+\red11\green79\blue121;\red57\green0\blue160;\red15\green104\blue160;\red108\green54\blue169;\red28\green70\blue74;
+\red50\green109\blue116;\red28\green0\blue207;\red196\green26\blue22;\red93\green108\blue121;\red93\green108\blue121;
+\red93\green108\blue121;}
+{\*\expandedcolortbl;;\csgenericrgb\c60759\c13753\c57628;\csgenericrgb\c100000\c100000\c100000;\csgenericrgb\c0\c0\c0\c85000;
+\csgenericrgb\c4314\c30980\c47451;\csgenericrgb\c22454\c0\c62803;\csgenericrgb\c5882\c40784\c62745;\csgenericrgb\c42190\c21278\c66379;\csgenericrgb\c10981\c27276\c28869;
+\csgenericrgb\c19418\c42935\c45455;\csgenericrgb\c11000\c0\c81000;\csgenericrgb\c77000\c10200\c8600;\csgenericrgb\c36526\c42188\c47515;\csgenericrgb\c36526\c42188\c47515\c35000;
+\csgenericrgb\c36526\c42188\c47515\c50000;}
+\margl1440\margr1440\vieww18880\viewh17400\viewkind0
+\deftab593
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf2 \cb3 \
+\
+final
+\f1\b0 \cf4  
+\f0\b \cf2 class
+\f1\b0 \cf4  \cf5 ContentViewModel\cf4 : NSObject, \cf6 ObservableObject\cf4 , \cf6 CLLocationManagerDelegate\cf4  \{\
+    \cf6 @Published\cf4  
+\f0\b \cf2 var
+\f1\b0 \cf4   \cf7 region\cf4  = \cf6 MKCoordinateRegion\cf4 (\cf8 center\cf4 : \cf9 MapDetails\cf4 .\cf10 startingLocation\cf4 , \cf8 span\cf4 : \cf9 MapDetails\cf4 .\cf10 defaultSpan\cf4 )\
+    \
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 locationManager\cf4 : \cf6 CLLocationManager\cf4 ?\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  \cf7 addressManager\cf4 : \cf6 CLGeocoder\cf4  = \cf6 CLGeocoder\cf4 ()\
+    \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf7 checkIfLocationServicesIsEnabled\cf4 () \{\
+        
+\f0\b \cf2 if
+\f1\b0 \cf4  \cf6 CLLocationManager\cf4 .\cf8 locationServicesEnabled\cf4 () \{\
+            \cf10 locationManager\cf4  = \cf6 CLLocationManager\cf4 ()\
+            \cf10 locationManager\cf4 ?.\cf8 delegate\cf4  = 
+\f0\b \cf2 self
+\f1\b0 \cf4 \
+            \cf10 locationManager\cf4 ?.\cf8 desiredAccuracy\cf4  = \cf8 kCLLocationAccuracyBest\cf4 \
+\
+            
+\f0\b \cf2 let
+\f1\b0 \cf4  loc: \cf6 CLLocation\cf4  = \cf8 CLLocation\cf4 (\
+                \cf8 latitude\cf4 : \cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 latitude\cf4  ?? \cf11 0\cf4 ,\
+                \cf8 longitude\cf4 : \cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 longitude\cf4  ?? \cf11 0\cf4 )\
+            \
+            \cf10 addressManager\cf4 .\cf8 reverseGeocodeLocation\cf4 (loc, \cf8 completionHandler\cf4 :\
+                \{(placemarks, error) 
+\f0\b \cf2 in
+\f1\b0 \cf4 \
+                
+\f0\b \cf2 if
+\f1\b0 \cf4  (error != 
+\f0\b \cf2 nil
+\f1\b0 \cf4 )\
+                \{\
+                    \cf8 print\cf4 (\cf12 "Reverse Geocode Fail: \cf4 \\(error!.\cf8 localizedDescription\cf4 )\cf12 "\cf4 )\
+                \}\
+                
+\f0\b \cf2 let
+\f1\b0 \cf4  pm = placemarks 
+\f0\b \cf2 as
+\f1\b0 \cf4  [\cf6 CLPlacemark\cf4 ]?\
+                
+\f0\b \cf2 if
+\f1\b0 \cf4  pm?.\cf8 count\cf4  ?? \cf11 0\cf4  > \cf11 0\cf4  \{\
+                    
+\f0\b \cf2 let
+\f1\b0 \cf4  pm = placemarks![\cf11 0\cf4 ]\
+                    \
+                    print(\cf12 "- Full Place:            "\cf4 , pm 
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Name:                  "\cf4 , pm.\cf8 name\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- SubLocality:           "\cf4 , pm.\cf8 subLocality\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Locality:              "\cf4 , pm.\cf8 locality\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- SubAdministrativeArea: "\cf4 , pm.\cf8 subAdministrativeArea\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- AdministrativeArea:    "\cf4 , pm.\cf8 administrativeArea\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- PostalCode:            "\cf4 , pm.\cf8 postalCode\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Country:               "\cf4 , pm.\cf8 country\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- IsoCountryCode:        "\cf4 , pm.\cf8 isoCountryCode\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- TimeZone:              "\cf4 , pm.\cf8 timeZone\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Location:              "\cf4 , pm.\cf8 location\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- AreasOfInterest:       "\cf4 , pm.\cf8 areasOfInterest\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- InlandWater:           "\cf4 , pm.\cf8 inlandWater\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Ocean:                 "\cf4 , pm.\cf8 ocean\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Region:                "\cf4 , pm.\cf10 region\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Thoroughfare:          "\cf4 , pm.\cf8 thoroughfare\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- SubThoroughfare:       "\cf4 , pm.\cf8 subThoroughfare\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Latitude:              "\cf4 , 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 latitude\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Longitude:             "\cf4 , 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 longitude\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+\
+                    \cf10 locationLabel\cf4  = \cf12 ""\cf4 \
+                    \
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  pm.\cf8 name\cf4  == \cf12 "North Atlantic Ocean"\cf4  \{\
+                        
+\f0\b \cf2 let
+\f1\b0 \cf4  name = \cf12 "Refresh 'Current Location'..."\cf4 \
+                        \cf10 locationLabel\cf4  += name \} 
+\f0\b \cf2 else
+\f1\b0 \cf4  \{ 
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  name = pm.\cf8 name\cf4  \{ \cf10 locationLabel\cf4  += \cf12 "\uc0\u8776  \cf4 \\(name)\cf12 \\n"\cf4  \} \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  subLocality = pm.\cf8 subLocality\cf4  \{ \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(subLocality)\cf12 , "\cf4  \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  locality = pm.\cf8 locality\cf4  \{ \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(locality)\cf12 , "\cf4  \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  subAdministrativeArea = pm.\cf8 subAdministrativeArea\cf4  \{ \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(subAdministrativeArea)\cf12 \\n"\cf4  \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  administrativeArea = pm.\cf8 administrativeArea\cf4  \{ \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(administrativeArea)\cf12 , "\cf4  \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  postalCode = pm.\cf8 postalCode\cf4  \{ \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(postalCode)\cf12 , "\cf4  \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  country = pm.\cf8 country\cf4  \{ \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(country)\cf12 "\cf4  \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  lat = 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 latitude\cf4  \{ \cf10 locationLat\cf4  = lat \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  lon = 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 longitude\cf4  \{ \cf10 locationLon\cf4  = lon \}\
+                    \
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  \cf10 locationLat\cf4  >= \cf11 0\cf4  \{ \cf10 hemiNS\cf4  = \cf12 "\'b0 N"\cf4  \} 
+\f0\b \cf2 else
+\f1\b0 \cf4  \{ \cf10 hemiNS\cf4  = \cf12 "\'b0 S"\cf4  \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  \cf10 locationLon\cf4  >= \cf11 0\cf4  \{ \cf10 hemiEW\cf4  = \cf12 "\'b0 E"\cf4  \} 
+\f0\b \cf2 else
+\f1\b0 \cf4  \{ \cf10 hemiEW\cf4  = \cf12 "\'b0 W"\cf4  \}\
+                    \
+                    print(\cf12 "locationLabel:       "\cf4 , \cf10 locationLabel\cf4 )\
+                    print(\cf12 "Coordinates Raw:     "\cf4 , \cf12 "\cf4 \\(\cf10 locationLat\cf4 )\cf12 "\cf4  + \cf12 ", "\cf4  + \cf12 "\cf4 \\(\cf10 locationLon\cf4 )\cf12 "\cf4 )\
+                    print(\cf12 "Coordinates Rounded: "\cf4 , \cf6 String\cf4 (\cf6 format\cf4 :\cf12 "%.8f"\cf4 , \cf10 locationLat\cf4 ) + \cf12 ", "\cf4  + \cf6 String\cf4 (\cf6 format\cf4 :\cf12 "%.8f"\cf4 , \cf10 locationLon\cf4 ))\
+                    print(\cf10 hemiNS\cf4 , \cf10 hemiEW\cf4 )\
+                \}\
+            \})\
+        \} 
+\f0\b \cf2 else
+\f1\b0 \cf4  \{\
+            \cf8 print\cf4 (\cf12 "Phone Location Services Setting is OFF"\cf4 )\
+        \}\
+    \}\
+    \cf13 \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+//                LocationButton(.currentLocation) \{\cf4 \
+\cf13 //                    viewModel.checkIfLocationServicesIsEnabled()\cf4 \
+\cf13 //                \}\cf4 \
+\cf13 //                .frame(height: 40, alignment: .center)\cf4 \
+\cf13 //                .foregroundColor(.white)\cf4 \
+\cf13 //                .cornerRadius(10)\cf4 \
+\cf13 //                .labelStyle(.titleAndIcon)\cf4 \
+\cf13 //                .symbolVariant(.fill)\cf4 \
+\cf13 //                .tint(.blue)\cf4 \
+\cf13 //                .opacity(0.8)\cf4 \
+\cf13 //                .padding(.bottom, 40)\cf4 \
+                \
+\
+\
+\
+\
+\
+\cf13 //\cf4 \
+\cf13 //  ContentView.swift\cf4 \
+\cf13 //  test2\cf4 \
+\cf13 //\cf4 \
+\cf13 //  Created by Alejandro on 4/28/22.\cf4 \
+\cf13 //\cf4 \
+\
+
+\f0\b \cf2 import
+\f1\b0 \cf4  SwiftUI\
+
+\f0\b \cf2 import
+\f1\b0 \cf4  MapKit\
+
+\f0\b \cf2 import
+\f1\b0 \cf4  CoreLocation\
+
+\f0\b \cf2 import
+\f1\b0 \cf4  CoreLocationUI\
+\
+
+\f0\b \cf2 struct
+\f1\b0 \cf4  \cf5 ContentView\cf4 : \cf6 View\cf4  \{\
+    \cf6 @StateObject\cf4  
+\f0\b \cf2 private
+\f1\b0 \cf4  
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 viewModel\cf4  = \cf9 ContentViewModel\cf4 ()\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 body\cf4 : 
+\f0\b \cf2 some
+\f1\b0 \cf4  \cf6 View\cf4  \{\
+        \
+        \cf6 ZStack\cf4 (\cf8 alignment\cf4 : .\cf8 bottom\cf4 ) \{\
+            \
+        \cf9 Map\cf4 (coordinateRegion: \cf10 $viewModel\cf4 .\cf10 region\cf4 , showsUserLocation: 
+\f0\b \cf2 true
+\f1\b0 \cf4 )\
+            .\cf8 ignoresSafeArea\cf4 ()\
+            .\cf8 accentColor\cf4 (\cf6 Color\cf4 (.\cf8 systemPink\cf4 ))\
+            .\cf8 onAppear\cf4  \{\
+                \cf10 viewModel\cf4 .\cf10 checkIfLocationServicesIsEnabled\cf4 ()\
+            \}\
+\
+            \cf6 VStack\cf4  \{\
+\
+                \cf6 Text\cf4 (\cf10 locationLabel\cf4 )\
+                    .\cf8 frame\cf4 (\cf8 width\cf4 : \cf11 420\cf4 , \cf8 height\cf4 : \cf11 70\cf4 , \cf8 alignment\cf4 : .\cf8 center\cf4 )\
+                    .\cf8 lineLimit\cf4 (\cf11 3\cf4 )\
+                    .\cf8 font\cf4 (.\cf8 system\cf4 (\cf8 size\cf4 : \cf11 18\cf4 , \cf8 weight\cf4 : .\cf8 light\cf4 , \cf8 design\cf4 : .\cf8 default\cf4 ))\
+                    .\cf8 minimumScaleFactor\cf4 (\cf11 0.5\cf4 )\
+                    .\cf8 multilineTextAlignment\cf4 (.\cf8 center\cf4 )\
+                    .\cf8 foregroundColor\cf4 (.\cf8 black\cf4 )\
+                    .\cf8 background\cf4 (.\cf8 white\cf4 )\
+                    .\cf8 padding\cf4 (.\cf8 top\cf4 , \cf11 1\cf4 )\
+                    .\cf8 opacity\cf4 (\cf11 0.9\cf4 )\
+                \
+                \cf6 Text\cf4 (\cf12 "Lat: \cf4 \\(\cf10 locationLat\cf4 )\cf12 ,"\cf4  + \cf12 " "\cf4  + \cf12 "Lon: \cf4 \\(\cf10 locationLon\cf4 )\cf12 "\cf4 )\
+                    .\cf8 frame\cf4 (\cf8 width\cf4 : \cf11 420\cf4 , \cf8 height\cf4 : \cf11 30\cf4 , \cf8 alignment\cf4 : .\cf8 center\cf4 )\
+                    .\cf8 lineLimit\cf4 (\cf11 1\cf4 )\
+                    .\cf8 font\cf4 (.\cf8 system\cf4 (\cf8 size\cf4 : \cf11 18\cf4 , \cf8 weight\cf4 : .\cf8 ultraLight\cf4 , \cf8 design\cf4 : .\cf8 default\cf4 ))\
+                    .\cf8 minimumScaleFactor\cf4 (\cf11 0.5\cf4 )\
+                    .\cf8 multilineTextAlignment\cf4 (.\cf8 center\cf4 )\
+                    .\cf8 foregroundColor\cf4 (.\cf8 black\cf4 )\
+                    .\cf8 background\cf4 (.\cf8 white\cf4 )\
+                    .\cf8 padding\cf4 (.\cf8 top\cf4 , -\cf11 7\cf4 )\
+                    .\cf8 opacity\cf4 (\cf11 0.9\cf4 )\
+                \
+                \cf6 Spacer\cf4 ()\
+                \
+                LocationButton(.\cf8 currentLocation\cf4 ) \{\
+    \cf13 //                viewModel.requestAllowOnceLocationPermission()\cf4 \
+    \cf13 //                viewModel.getAddressFromLatLon(pdblLatitude: locationLat, pdblLongitude: locationLon)\cf4 \
+                \}\
+                .\cf8 frame\cf4 (\cf8 height\cf4 : \cf11 40\cf4 , \cf8 alignment\cf4 : .\cf8 center\cf4 )\
+                .\cf8 foregroundColor\cf4 (.\cf8 white\cf4 )\
+                .\cf8 cornerRadius\cf4 (\cf11 10\cf4 )\
+                .\cf8 labelStyle\cf4 (.\cf8 titleAndIcon\cf4 )\
+                .\cf8 symbolVariant\cf4 (.\cf8 fill\cf4 )\
+                .\cf8 tint\cf4 (.\cf8 blue\cf4 )\
+                .\cf8 opacity\cf4 (\cf11 0.8\cf4 )\
+                .\cf8 padding\cf4 (.\cf8 bottom\cf4 , \cf11 40\cf4 )\
+            \}\
+        \}\
+    \}\
+\}\
+\
+
+\f0\b \cf2 struct
+\f1\b0 \cf4  \cf5 ContentView_Previews\cf4 : \cf6 PreviewProvider\cf4  \{\
+    
+\f0\b \cf2 static
+\f1\b0 \cf4  
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 previews\cf4 : 
+\f0\b \cf2 some
+\f1\b0 \cf4  \cf6 View\cf4  \{\
+        \cf9 ContentView\cf4 ()\
+    \}\
+\}\
+\
+
+\f0\b \cf2 enum
+\f1\b0 \cf4  \cf5 MapDetails\cf4  \{\
+    
+\f0\b \cf2 static
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  \cf7 startingLocation\cf4  = \cf6 CLLocationCoordinate2D\cf4 (\cf8 latitude\cf4 : \cf11 0\cf4 , \cf8 longitude\cf4 : -\cf11 80\cf4 )\
+    
+\f0\b \cf2 static
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  \cf7 defaultSpan\cf4  = \cf6 MKCoordinateSpan\cf4 (\cf8 latitudeDelta\cf4 : \cf11 100\cf4 , \cf8 longitudeDelta\cf4 : \cf11 100\cf4 )\
+    
+\f0\b \cf2 static
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  \cf7 currentSpan\cf4  = \cf6 MKCoordinateSpan\cf4 (\cf8 latitudeDelta\cf4 : \cf11 0.007\cf4 , \cf8 longitudeDelta\cf4 : \cf11 0.007\cf4 )\
+\}\
+\
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 locationLabel\cf4 : \cf6 String\cf4  = \cf12 "Processing Coordinates..."\cf4 \
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 locationLat\cf4 : \cf6 Double\cf4  = \cf11 0\cf4 \
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 locationLon\cf4 : \cf6 Double\cf4  = \cf11 0\cf4 \
+\
+
+\f0\b \cf2 final
+\f1\b0 \cf4  
+\f0\b \cf2 class
+\f1\b0 \cf4  \cf5 ContentViewModel\cf4 : NSObject, \cf6 ObservableObject\cf4 , \cf6 CLLocationManagerDelegate\cf4  \{\
+    \cf6 @Published\cf4  
+\f0\b \cf2 var
+\f1\b0 \cf4   \cf7 region\cf4  = \cf6 MKCoordinateRegion\cf4 (\cf8 center\cf4 : \cf9 MapDetails\cf4 .\cf10 startingLocation\cf4 , \cf8 span\cf4 : \cf9 MapDetails\cf4 .\cf10 defaultSpan\cf4 )\
+    \
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 locationManager\cf4 : \cf6 CLLocationManager\cf4 ?\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  \cf7 addressManager\cf4 : \cf6 CLGeocoder\cf4  = \cf6 CLGeocoder\cf4 ()\
+    \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf7 checkIfLocationServicesIsEnabled\cf4 () \{\
+        
+\f0\b \cf2 if
+\f1\b0 \cf4  \cf6 CLLocationManager\cf4 .\cf8 locationServicesEnabled\cf4 () \{\
+            \cf10 locationManager\cf4  = \cf6 CLLocationManager\cf4 ()\
+            \cf10 locationManager\cf4 ?.\cf8 delegate\cf4  = 
+\f0\b \cf2 self
+\f1\b0 \cf4 \
+            \cf10 locationManager\cf4 ?.\cf8 desiredAccuracy\cf4  = \cf8 kCLLocationAccuracyBest\cf4 \
+            print(\cf12 "LocationManagerLat: "\cf4 , \cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 latitude\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+            print(\cf12 "LocationManagerLon: "\cf4 , \cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 longitude\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+            \
+            
+\f0\b \cf2 let
+\f1\b0 \cf4  loc: \cf6 CLLocation\cf4  = \cf6 CLLocation\cf4 (\cf8 latitude\cf4 : (\cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 latitude\cf4  ?? \cf11 1\cf4 ), \cf8 longitude\cf4 : \cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 longitude\cf4  ?? \cf11 1\cf4 )\
+            \cf10 addressManager\cf4 .\cf8 reverseGeocodeLocation\cf4 (loc, \cf8 completionHandler\cf4 :\
+                \{(placemarks, error) 
+\f0\b \cf2 in
+\f1\b0 \cf4 \
+                
+\f0\b \cf2 if
+\f1\b0 \cf4  (error != 
+\f0\b \cf2 nil
+\f1\b0 \cf4 )\
+                \{\
+                    \cf8 print\cf4 (\cf12 "Reverse Geocode Fail: \cf4 \\(error!.\cf8 localizedDescription\cf4 )\cf12 "\cf4 )\
+                \}\
+                
+\f0\b \cf2 let
+\f1\b0 \cf4  pm = placemarks! 
+\f0\b \cf2 as
+\f1\b0 \cf4  [\cf6 CLPlacemark\cf4 ]\
+                
+\f0\b \cf2 if
+\f1\b0 \cf4  pm.\cf8 count\cf4  > \cf11 0\cf4  \{\
+                    
+\f0\b \cf2 let
+\f1\b0 \cf4  pm = placemarks![\cf11 0\cf4 ]\
+                    \
+                    print(\cf12 "- Full Place:            "\cf4 , pm 
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Name:                  "\cf4 , pm.\cf8 name\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- SubLocality:           "\cf4 , pm.\cf8 subLocality\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Locality:              "\cf4 , pm.\cf8 locality\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- SubAdministrativeArea: "\cf4 , pm.\cf8 subAdministrativeArea\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- AdministrativeArea:    "\cf4 , pm.\cf8 administrativeArea\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- PostalCode:            "\cf4 , pm.\cf8 postalCode\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Country:               "\cf4 , pm.\cf8 country\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- IsoCountryCode:        "\cf4 , pm.\cf8 isoCountryCode\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- TimeZone:              "\cf4 , pm.\cf8 timeZone\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Location:              "\cf4 , pm.\cf8 location\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- AreasOfInterest:       "\cf4 , pm.\cf8 areasOfInterest\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- InlandWater:           "\cf4 , pm.\cf8 inlandWater\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Ocean:                 "\cf4 , pm.\cf8 ocean\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Region:                "\cf4 , pm.\cf10 region\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Thoroughfare:          "\cf4 , pm.\cf8 thoroughfare\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- SubThoroughfare:       "\cf4 , pm.\cf8 subThoroughfare\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Latitude:              "\cf4 , 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 latitude\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Longitude:             "\cf4 , 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 longitude\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+\
+                    \cf10 locationLabel\cf4  = \cf12 ""\cf4 \
+        \
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  name = pm.\cf8 name\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(name)\cf12 \\n"\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  subLocality = pm.\cf8 subLocality\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(subLocality)\cf12 , "\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  locality = pm.\cf8 locality\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(locality)\cf12 , "\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  subAdministrativeArea = pm.\cf8 subAdministrativeArea\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(subAdministrativeArea)\cf12 \\n"\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  administrativeArea = pm.\cf8 administrativeArea\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(administrativeArea)\cf12 , "\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  postalCode = pm.\cf8 postalCode\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(postalCode)\cf12 , "\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  country = pm.\cf8 country\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(country)\cf12 "\cf4 \
+                    \}\
+                    \
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  lat = 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 latitude\cf4  \{\
+                        \cf10 locationLat\cf4  += lat\
+                    \}\
+                    \
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  lon = 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 locationManager\cf4 ?.\cf8 location\cf4 ?.\cf8 coordinate\cf4 .\cf8 longitude\cf4  \{\
+                        \cf10 locationLon\cf4  += lon\
+                    \}\
+                    \
+                    print(\cf12 "locationLabel: "\cf4 , \cf10 locationLabel\cf4 )\
+                    print(\cf12 "Coordinates:   "\cf4 , \cf12 "\cf4 \\(\cf10 locationLat\cf4 )\cf12 "\cf4  + \cf12 " "\cf4  + \cf12 "\cf4 \\(\cf10 locationLon\cf4 )\cf12 "\cf4 )\
+\cf13 //                    print("LocationLon:   ", locationLon)\cf4 \
+                \}\
+                \
+            \})\
+            \
+        \} 
+\f0\b \cf2 else
+\f1\b0 \cf4  \{\
+            \cf8 print\cf4 (\cf12 "Phone Location Services Setting is OFF"\cf4 )\
+        \}\
+    \}\
+    \
+\cf13 //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) \{\cf4 \
+\cf13 //        guard let latestLocation = locations.first else \{\cf4 \
+\cf13 //            return\cf4 \
+\cf13 //        \}\cf4 \
+        \
+\cf13 //        DispatchQueue.main.async \{\cf4 \
+\cf13 //            self.region = MKCoordinateRegion(center: latestLocation.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.007, longitudeDelta: 0.007))\cf4 \
+\cf13 //        \}\cf4 \
+        \
+        \cf13 // Reads Coordinates\cf4 \
+\cf13 //        print("Lat: ", locations.last?.coordinate.latitude ?? 0)\cf4 \
+\cf13 //        print("Lon: ", locations.last?.coordinate.longitude ?? 0)\cf4 \
+\cf13 //        print(locationLat, locationLon)\cf4 \
+\
+\cf13 //        \}\cf4 \
+    \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf7 locationManagerDidChangeAuthorization\cf4 (\cf7 _\cf4  manager: \cf6 CLLocationManager\cf4 ) \{\
+        \cf10 checkLocationAuthorization\cf4 ()\
+    \}\
+    \
+    
+\f0\b \cf2 private
+\f1\b0 \cf4  
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf7 checkLocationAuthorization\cf4 () \{\
+        
+\f0\b \cf2 guard
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  locationManager = \cf10 locationManager\cf4  
+\f0\b \cf2 else
+\f1\b0 \cf4  \{ 
+\f0\b \cf2 return
+\f1\b0 \cf4  \}\
+        
+\f0\b \cf2 switch
+\f1\b0 \cf4  locationManager.\cf8 authorizationStatus\cf4  \{\
+        
+\f0\b \cf2 case
+\f1\b0 \cf4  .\cf8 notDetermined\cf4 :\
+            locationManager.\cf8 requestWhenInUseAuthorization\cf4 ()\
+        
+\f0\b \cf2 case
+\f1\b0 \cf4  .\cf8 restricted\cf4 :\
+            \cf8 print\cf4 (\cf12 "Location is Restricted"\cf4 )\
+        
+\f0\b \cf2 case
+\f1\b0 \cf4  .\cf8 denied\cf4 :\
+            \cf8 print\cf4 (\cf12 "Location is Denied"\cf4 )\
+        
+\f0\b \cf2 case
+\f1\b0 \cf4  .\cf8 authorizedAlways\cf4 , .\cf8 authorizedWhenInUse\cf4 :\
+            \cf10 region\cf4  = \cf6 MKCoordinateRegion\cf4 (\cf8 center\cf4 : locationManager.\cf8 location\cf4 !.\cf8 coordinate\cf4 , \cf8 span\cf4 : \cf9 MapDetails\cf4 .\cf10 currentSpan\cf4 )\
+        
+\f0\b \cf2 @unknown
+\f1\b0 \cf4  
+\f0\b \cf2 default
+\f1\b0 \cf4 :\
+            
+\f0\b \cf2 break
+\f1\b0 \cf4 \
+        \}\
+    \}\
+\}\
+\
+\
+\
+\
+\
+\
+\cf13 //\cf4 \
+\cf13 //class ContentViewModel: NSObject, ObservableObject, CLLocationManagerDelegate \{\cf4 \
+\cf13 //\cf4 \
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf14 ///
+\f2 \cf13 /    @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(), span: MKCoordinateSpan(latitudeDelta: 0.007, longitudeDelta: 0.007))
+\f1 \cf4 \
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf13 //\cf4 \
+\cf13 //    let locationManager = CLLocationManager()\cf4 \
+\cf13 //\cf4 \
+\cf13 //    override init() \{\cf4 \
+\cf13 //        super.init()\cf4 \
+\cf13 //        locationManager.delegate = self\cf4 \
+\cf13 //    \}\cf4 \
+\cf13 //\cf4 \
+\cf13 //    func requestAllowOnceLocationPermission() \{\cf4 \
+\cf13 //        locationManager.requestLocation()\cf4 \
+\cf13 //    \}\cf4 \
+\cf13 //\cf4 \
+\cf13 //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation], didFailWithError error: Error) \{\cf4 \
+\cf13 //        guard let latestLocation = locations.first else \{\cf4 \
+\cf13 //            return\cf4 \
+\cf13 //\cf4 \
+\cf13 //        \}\cf4 \
+\cf13 //        print("latestLocation: ", latestLocation)\cf4 \
+\cf13 //\cf4 \
+\cf13 //\cf4 \
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf14 ///
+\f2 \cf13 /    func locationManager(
+\f1 \cf15 _
+\f3\i \cf13  manager: CLLocationManager, didFailWithError error: Error) \{
+\f1\i0 \cf4 \
+\cf14 ///
+\f3\i \cf13 /        print(error.localizedDescription)
+\f1\i0 \cf4 \
+\cf14 ///
+\f3\i \cf13 /    \}
+\f1\i0 \cf4 \
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf13 //\cf4 \
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf14 ///
+\f2 \cf13 /        DispatchQueue.main.async \{
+\f1 \cf4 \
+\cf14 ///
+\f2 \cf13 /            self.region = MKCoordinateRegion(center: latestLocation.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.007, longitudeDelta: 0.007))
+\f1 \cf4 \
+\cf14 ///
+\f2 \cf13 /        \}
+\f1 \cf4 \
+\cf14 ///
+\f2 \cf13 /
+\f1 \cf4 \
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+\cf13 //    func lookUpCurrentLocation(completionHandler: @escaping (CLPlacemark?)\cf4 \
+\cf13 //                    -> Void ) \{\cf4 \
+\cf13 //        // Use the last reported location.\cf4 \
+\cf13 //        if let lastLocation = self.locationManager.location \{\cf4 \
+\cf13 //            let geocoder = CLGeocoder()\cf4 \
+\cf13 //\cf4 \
+\cf13 //            // Look up the location and pass it to the completion handler\cf4 \
+\cf13 //            geocoder.reverseGeocodeLocation(lastLocation, completionHandler:\cf4 \
+\cf13 //                \{ (placemarks, error) in\cf4 \
+\cf13 //                if error == nil \{\cf4 \
+\cf13 //                    let firstLocation = placemarks?[0]\cf4 \
+\cf13 //                    completionHandler(firstLocation)\cf4 \
+\cf13 //                    print("firstLocation: ", firstLocation?.locality as Any)\cf4 \
+\cf13 //                \} else \{\cf4 \
+\cf13 //                 // An error occurred during geocoding.\cf4 \
+\cf13 //                    completionHandler(nil)\cf4 \
+\cf13 //                \}\cf4 \
+\cf13 //            \})\cf4 \
+\cf13 //        \}\cf4 \
+\cf13 //        else \{\cf4 \
+\cf13 //            // No location was available.\cf4 \
+\cf13 //            completionHandler(nil)\cf4 \
+\cf13 //        \}\cf4 \
+\cf13 //    \}\cf4 \
+\cf13 //\cf4 \
+\cf13 //\cf4 \
+\cf13 //\}\cf4 \
+\cf13 //\}\cf4 \
+\cf13 \
+\
+\
+===========================================\
+\
+\
+\
+\
+\
+//\cf4 \
+\cf13 //  ContenView.swift\cf4 \
+\cf13 //  Location Names\cf4 \
+\cf13 //\cf4 \
+\cf13 //  Created by Alejandro on 4/26/22.\cf4 \
+\cf13 //\cf4 \
+\
+
+\f0\b \cf2 import
+\f1\b0 \cf4  CoreLocationUI\
+
+\f0\b \cf2 import
+\f1\b0 \cf4  CoreLocation\
+
+\f0\b \cf2 import
+\f1\b0 \cf4  MapKit\
+
+\f0\b \cf2 import
+\f1\b0 \cf4  SwiftUI\
+\
+
+\f0\b \cf2 struct
+\f1\b0 \cf4  \cf5 ContentView\cf4 : \cf6 View\cf4  \{\
+    \
+    \cf6 @StateObject\cf4  
+\f0\b \cf2 private
+\f1\b0 \cf4  
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 viewModel\cf4  = \cf9 ContentViewModel\cf4 ()\
+    \
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 body\cf4 : 
+\f0\b \cf2 some
+\f1\b0 \cf4  \cf6 View\cf4  \{\
+        \
+        \cf6 ZStack\cf4 (\cf8 alignment\cf4 : .\cf8 bottom\cf4 ) \{\
+            \cf9 Map\cf4 (coordinateRegion: \cf10 $viewModel\cf4 .\cf10 region\cf4 , showsUserLocation: 
+\f0\b \cf2 true
+\f1\b0 \cf4 )\
+                .\cf8 ignoresSafeArea\cf4 ()\
+            \
+            \cf6 VStack\cf4  \{\
+\
+                \cf6 Text\cf4 (\cf10 locationLabel\cf4 )\
+                    .\cf8 frame\cf4 (\cf8 width\cf4 : \cf11 420\cf4 , \cf8 height\cf4 : \cf11 70\cf4 , \cf8 alignment\cf4 : .\cf8 center\cf4 )\
+                    .\cf8 lineLimit\cf4 (\cf11 3\cf4 )\
+                    .\cf8 font\cf4 (.\cf8 system\cf4 (\cf8 size\cf4 : \cf11 18\cf4 , \cf8 weight\cf4 : .\cf8 light\cf4 , \cf8 design\cf4 : .\cf8 default\cf4 ))\
+                    .\cf8 minimumScaleFactor\cf4 (\cf11 0.5\cf4 )\
+                    .\cf8 multilineTextAlignment\cf4 (.\cf8 center\cf4 )\
+                    .\cf8 foregroundColor\cf4 (.\cf8 black\cf4 )\
+                    .\cf8 background\cf4 (.\cf8 white\cf4 )\
+                    .\cf8 padding\cf4 (.\cf8 top\cf4 , \cf11 1\cf4 )\
+                    .\cf8 opacity\cf4 (\cf11 0.9\cf4 )\
+                \
+                \cf6 Text\cf4 (\cf12 "Lat: \cf4 \\(\cf10 locationLat\cf4 )\cf12 ,"\cf4  + \cf12 " "\cf4  + \cf12 "Lon: \cf4 \\(\cf10 locationLon\cf4 )\cf12 "\cf4 )\
+                    .\cf8 frame\cf4 (\cf8 width\cf4 : \cf11 420\cf4 , \cf8 height\cf4 : \cf11 30\cf4 , \cf8 alignment\cf4 : .\cf8 center\cf4 )\
+                    .\cf8 lineLimit\cf4 (\cf11 1\cf4 )\
+                    .\cf8 font\cf4 (.\cf8 system\cf4 (\cf8 size\cf4 : \cf11 18\cf4 , \cf8 weight\cf4 : .\cf8 ultraLight\cf4 , \cf8 design\cf4 : .\cf8 default\cf4 ))\
+                    .\cf8 minimumScaleFactor\cf4 (\cf11 0.5\cf4 )\
+                    .\cf8 multilineTextAlignment\cf4 (.\cf8 center\cf4 )\
+                    .\cf8 foregroundColor\cf4 (.\cf8 black\cf4 )\
+                    .\cf8 background\cf4 (.\cf8 white\cf4 )\
+                    .\cf8 padding\cf4 (.\cf8 top\cf4 , -\cf11 7\cf4 )\
+                    .\cf8 opacity\cf4 (\cf11 0.9\cf4 )\
+                \
+                \cf6 Spacer\cf4 ()\
+                \
+                LocationButton(.\cf8 currentLocation\cf4 ) \{\
+                    \cf10 viewModel\cf4 .\cf10 requestAllowOnceLocationPermission\cf4 ()\
+                    \cf10 viewModel\cf4 .\cf10 getAddressFromLatLon\cf4 (\cf10 pdblLatitude\cf4 : \cf10 locationLat\cf4 , \cf10 pdblLongitude\cf4 : \cf10 locationLon\cf4 )\
+                \}\
+                .\cf8 frame\cf4 (\cf8 height\cf4 : \cf11 40\cf4 , \cf8 alignment\cf4 : .\cf8 center\cf4 )\
+                .\cf8 foregroundColor\cf4 (.\cf8 white\cf4 )\
+                .\cf8 cornerRadius\cf4 (\cf11 10\cf4 )\
+                .\cf8 labelStyle\cf4 (.\cf8 titleAndIcon\cf4 )\
+                .\cf8 symbolVariant\cf4 (.\cf8 fill\cf4 )\
+                .\cf8 tint\cf4 (.\cf8 blue\cf4 )\
+                .\cf8 opacity\cf4 (\cf11 0.8\cf4 )\
+                .\cf8 padding\cf4 (.\cf8 bottom\cf4 , \cf11 40\cf4 )\
+            \}\
+        \}\
+    \}\
+\}\
+\
+
+\f0\b \cf2 struct
+\f1\b0 \cf4  \cf5 ContentView_Previews\cf4 : \cf6 PreviewProvider\cf4  \{\
+    
+\f0\b \cf2 static
+\f1\b0 \cf4  
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 previews\cf4 : 
+\f0\b \cf2 some
+\f1\b0 \cf4  \cf6 View\cf4  \{\
+        \cf9 ContentView\cf4 ()\
+    \}\
+\}\
+\
+\cf13 // Default Variables\cf4 \
+
+\f0\b \cf2 public
+\f1\b0 \cf4  
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 locationLat\cf4 : \cf6 Double\cf4  = \cf11 0\cf4 \
+
+\f0\b \cf2 public
+\f1\b0 \cf4  
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 locationLon\cf4 : \cf6 Double\cf4  = \cf11 0\cf4 \
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 locationLabel\cf4 : \cf6 String\cf4  = \cf12 "Processing Coordinates..."\cf4 \
+\
+
+\f0\b \cf2 final
+\f1\b0 \cf4  
+\f0\b \cf2 class
+\f1\b0 \cf4  \cf5 ContentViewModel\cf4 : NSObject, \cf6 ObservableObject\cf4 , \cf6 CLLocationManagerDelegate\cf4  \{\
+    \
+    \cf6 @Published\cf4  
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf7 region\cf4  = \cf6 MKCoordinateRegion\cf4 (\cf8 center\cf4 : \cf6 CLLocationCoordinate2D\cf4 (), \cf8 span\cf4 : \cf6 MKCoordinateSpan\cf4 (\cf8 latitudeDelta\cf4 : \cf11 0.007\cf4 , \cf8 longitudeDelta\cf4 : \cf11 0.007\cf4 ))\
+    \
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  \cf7 locationManager\cf4  = \cf6 CLLocationManager\cf4 ()\
+    \
+    
+\f0\b \cf2 override
+\f1\b0 \cf4  
+\f0\b \cf2 init
+\f1\b0 \cf4 () \{\
+        
+\f0\b \cf2 super
+\f1\b0 \cf4 .\cf8 init\cf4 ()\
+        \cf10 locationManager\cf4 .\cf8 delegate\cf4  = 
+\f0\b \cf2 self
+\f1\b0 \cf4 \
+    \}\
+    \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf7 requestAllowOnceLocationPermission\cf4 () \{\
+        \cf10 locationManager\cf4 .\cf8 requestLocation\cf4 ()\
+    \}\
+    \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf7 locationManager\cf4 (\cf7 _\cf4  manager: \cf6 CLLocationManager\cf4 , \cf7 didUpdateLocations\cf4  locations: [\cf6 CLLocation\cf4 ]) \{\
+        
+\f0\b \cf2 guard
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  latestLocation = locations.\cf8 first\cf4  
+\f0\b \cf2 else
+\f1\b0 \cf4  \{\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4 \
+        \}\
+        \
+        DispatchQueue.\cf8 main\cf4 .\cf8 async\cf4  \{\
+            
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 region\cf4  = \cf6 MKCoordinateRegion\cf4 (\cf8 center\cf4 : latestLocation.\cf8 coordinate\cf4 , \cf8 span\cf4 : \cf6 MKCoordinateSpan\cf4 (\cf8 latitudeDelta\cf4 : \cf11 0.007\cf4 , \cf8 longitudeDelta\cf4 : \cf11 0.007\cf4 ))\
+        \}\
+        \
+        \cf13 // Reads Coordinates\cf4 \
+        \cf10 locationLat\cf4  = locations.\cf8 last\cf4 ?.\cf8 coordinate\cf4 .\cf8 latitude\cf4  ?? \cf11 0\cf4 \
+        \cf10 locationLon\cf4  = locations.\cf8 last\cf4 ?.\cf8 coordinate\cf4 .\cf8 longitude\cf4  ?? \cf11 0\cf4 \
+        print(\cf10 locationLat\cf4 , \cf10 locationLon\cf4 )\
+\
+        \}\
+    \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf7 locationManager\cf4 (\cf7 _\cf4  manager: \cf6 CLLocationManager\cf4 , \cf7 didFailWithError\cf4  error: \cf6 Error\cf4 ) \{\
+        \cf8 print\cf4 (error.\cf8 localizedDescription\cf4 )\
+    \}\
+    \
+    \cf13 // Gets Address Info from Coordinates\cf4 \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf7 getAddressFromLatLon\cf4 (\cf7 pdblLatitude\cf4 : \cf6 Double\cf4 , \cf7 pdblLongitude\cf4 : \cf6 Double\cf4 ) \{\
+        
+\f0\b \cf2 var
+\f1\b0 \cf4  center : \cf6 CLLocationCoordinate2D\cf4  = \cf6 CLLocationCoordinate2D\cf4 ()\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  lat: \cf6 Double\cf4  = \cf6 Double\cf4 (pdblLatitude)\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  lon: \cf6 Double\cf4  = \cf6 Double\cf4 (pdblLongitude)\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  ceo: \cf6 CLGeocoder\cf4  = \cf6 CLGeocoder\cf4 ()\
+        center.\cf8 latitude\cf4  = lat\
+        center.\cf8 longitude\cf4  = lon\
+\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  loc: \cf6 CLLocation\cf4  = \cf6 CLLocation\cf4 (\cf8 latitude\cf4 :center.\cf8 latitude\cf4 , \cf8 longitude\cf4 : center.\cf8 longitude\cf4 )\
+\
+        ceo.\cf8 reverseGeocodeLocation\cf4 (loc, \cf8 completionHandler\cf4 :\
+            \{(placemarks, error) 
+\f0\b \cf2 in
+\f1\b0 \cf4 \
+                
+\f0\b \cf2 if
+\f1\b0 \cf4  (error != 
+\f0\b \cf2 nil
+\f1\b0 \cf4 )\
+                \{\
+                    \cf8 print\cf4 (\cf12 "reverse geodcode fail: \cf4 \\(error!.\cf8 localizedDescription\cf4 )\cf12 "\cf4 )\
+                \}\
+                
+\f0\b \cf2 let
+\f1\b0 \cf4  pm = placemarks! 
+\f0\b \cf2 as
+\f1\b0 \cf4  [\cf6 CLPlacemark\cf4 ]\
+\
+                
+\f0\b \cf2 if
+\f1\b0 \cf4  pm.\cf8 count\cf4  > \cf11 0\cf4  \{\
+                    
+\f0\b \cf2 let
+\f1\b0 \cf4  pm = placemarks![\cf11 0\cf4 ]\
+\
+                    print(\cf12 "- Full Place:            "\cf4 , pm 
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Name:                  "\cf4 , pm.\cf8 name\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- SubLocality:           "\cf4 , pm.\cf8 subLocality\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Locality:              "\cf4 , pm.\cf8 locality\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- SubAdministrativeArea: "\cf4 , pm.\cf8 subAdministrativeArea\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- AdministrativeArea:    "\cf4 , pm.\cf8 administrativeArea\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- PostalCode:            "\cf4 , pm.\cf8 postalCode\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Country:               "\cf4 , pm.\cf8 country\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- IsoCountryCode:        "\cf4 , pm.\cf8 isoCountryCode\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- TimeZone:              "\cf4 , pm.\cf8 timeZone\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Location:              "\cf4 , pm.\cf8 location\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- AreasOfInterest:       "\cf4 , pm.\cf8 areasOfInterest\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- InlandWater:           "\cf4 , pm.\cf8 inlandWater\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Ocean:                 "\cf4 , pm.\cf8 ocean\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Region:                "\cf4 , pm.\cf10 region\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- Thoroughfare:          "\cf4 , pm.\cf8 thoroughfare\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+                    print(\cf12 "- SubThoroughfare:       "\cf4 , pm.\cf8 subThoroughfare\cf4  
+\f0\b \cf2 as
+\f1\b0 \cf4  
+\f0\b \cf2 Any
+\f1\b0 \cf4 )\
+\
+                    \cf10 locationLabel\cf4  = \cf12 ""\cf4 \
+        \
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  name = pm.\cf8 name\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(name)\cf12 \\n"\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  subLocality = pm.\cf8 subLocality\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(subLocality)\cf12 , "\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  locality = pm.\cf8 locality\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(locality)\cf12 , "\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  subAdministrativeArea = pm.\cf8 subAdministrativeArea\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(subAdministrativeArea)\cf12 \\n"\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  administrativeArea = pm.\cf8 administrativeArea\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(administrativeArea)\cf12 , "\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  postalCode = pm.\cf8 postalCode\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(postalCode)\cf12 , "\cf4 \
+                    \}\
+                    
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  country = pm.\cf8 country\cf4  \{\
+                        \cf10 locationLabel\cf4  += \cf12 "\cf4 \\(country)\cf12 "\cf4 \
+                    \}\
+                    \
+                    print(\cf12 "locationLabel: "\cf4 , \cf10 locationLabel\cf4 )\
+              \}\
+        \})\
+    \}\
+\}\
+    \
+\
+\cf13 \
+\
+\
+\
+\
+func getAddressFromLatLon(pdblLatitude: String, withLongitude pdblLongitude: String) \{\
+        var center : CLLocationCoordinate2D = CLLocationCoordinate2D()\
+        let lat: Double = Double("\\(pdblLatitude)")!\
+        //21.228124\
+        let lon: Double = Double("\\(pdblLongitude)")!\
+        //72.833770\
+        let ceo: CLGeocoder = CLGeocoder()\
+        center.latitude = lat\
+        center.longitude = lon\
+\
+        let loc: CLLocation = CLLocation(latitude:center.latitude, longitude: center.longitude)\
+\
+\
+        ceo.reverseGeocodeLocation(loc, completionHandler:\
+            \{(placemarks, error) in\
+                if (error != nil)\
+                \{\
+                    print("reverse geodcode fail: \\(error!.localizedDescription)")\
+                \}\
+                let pm = placemarks! as [CLPlacemark]\
+\
+                if pm.count > 0 \{\
+                    let pm = placemarks![0]\
+                    print(pm.country)\
+                    print(pm.locality)\
+                    print(pm.subLocality)\
+                    print(pm.thoroughfare)\
+                    print(pm.postalCode)\
+                    print(pm.subThoroughfare)\
+                    var addressString : String = ""\
+                    if pm.subLocality != nil \{\
+                        addressString = addressString + pm.subLocality! + ", "\
+                    \}\
+                    if pm.thoroughfare != nil \{\
+                        addressString = addressString + pm.thoroughfare! + ", "\
+                    \}\
+                    if pm.locality != nil \{\
+                        addressString = addressString + pm.locality! + ", "\
+                    \}\
+                    if pm.country != nil \{\
+                        addressString = addressString + pm.country! + ", "\
+                    \}\
+                    if pm.postalCode != nil \{\
+                        addressString = addressString + pm.postalCode! + " "\
+                    \}\
+\
+\
+                    print(addressString)\
+              \}\
+        \})\
+\
+    \}\
+\
+\
+\
+//    func resolveLocationName(with location: CLLocation, completion: @escaping ((String?) -> Void)) \{\cf4 \
+\cf13 //        let geocoder = CLGeocoder()\cf4 \
+\cf13 //        geocoder.reverseGeocodeLocation(location, preferredLocale: .current) \{ placemarks,\cf4 \
+\cf13 //            error in\cf4 \
+\cf13 //            guard let place = placemarks?.first, error == nil else \{\cf4 \
+\cf13 //                completion(nil)\cf4 \
+\cf13 //                return\cf4 \
+\cf13 //            \}\cf4 \
+\cf13 //\cf4 \
+\cf13 //    func locationManager(_ manager: CLPlacemark, didUpdateLocations places: [CLGeocoder]) \{\cf4 \
+\cf13 //        guard let latestPlaces = places.first else \{\cf4 \
+\cf13 //            return  // Shows errors\cf4 \
+\cf13 //        \}\cf4 \
+\cf13 //        print(latestPlaces)\cf4 \
+\cf13 //    \}\cf4 \
+\cf13 //        print(place)\cf4 \
+\cf13 //        print("Flag 3")\cf4 \
+\cf13 //\cf4 \
+\cf13 //        \}\cf4 \
+\cf13 //    \}\
+\
+\
+\
+\
+\
+\
+        var place = currentPlacemark?.region\cf4 \
+\cf13         print(place as Any)\cf4 \
+\cf13         currentPlacemark = String(locations.first)\cf4 \
+\cf13         let geocoder = CLGeocoder()\cf4 \
+\cf13         geocoder.reverseGeocodeLocation(places) \{ (placemarks, error) in\cf4 \
+\cf13             self.currentPlacemark = placemarks?.first\
+\
+\
+\
+    func getLocation(from address: String, completion: @escaping (_ location: CLLocationCoordinate2D?)-> Void) \{\cf4 \
+\cf13         print("Flag 2")\cf4 \
+\cf13         let geocoder = CLGeocoder()\cf4 \
+\cf13         geocoder.geocodeAddressString(address) \{ (placemarks, error) in\cf4 \
+\cf13             guard let placemarks = placemarks,\cf4 \
+\cf13             let location = placemarks.first?.location?.coordinate else \{\cf4 \
+\cf13                 completion(nil)\cf4 \
+\cf13                 return\cf4 \
+\cf13             \}\cf4 \
+\cf13             completion(location)\cf4 \
+\cf13             print(location)\cf4 \
+\cf13             print(placemarks)\cf4 \
+\cf13             print(geocoder)\cf4 \
+\cf13             print(completion)\cf4 \
+\cf13             print(address)\cf4 \
+\cf13             print("Flag 3")\cf4 \
+\cf13         \}\cf4 \
+\cf13     \}\cf4 \
+    \
+    \
+\cf13     func locationManager(_ manager: CLLocationManager, didUpdateLocations places: [CLGeocoder]) \{\cf4 \
+\
+\cf13         let geocoder = CLGeocoder()\cf4 \
+\cf13         place = geocoder.reverseGeocodeLocation(places, preferredLocale: .current)\cf4 \
+\
+\cf13     geocoder.reverseGeocodeLocation(places, preferredLocale: .current)\cf4 \
+\cf13         print(place as Any)\cf4 \
+\cf13     \}\cf4 \
+    \
+\
+    \
+    \
+\cf13     struct ContentView: View \{\cf4 \
+\cf13         @State var myText = "Some Text just for reference"\cf4 \
+\cf13         @State var location: CLLocationCoordinate2D?\cf4 \
+\cf13         var body: some View \{\cf4 \
+\cf13             Text(myText)\cf4 \
+\cf13                 .onAppear \{\cf4 \
+\cf13                     self.getLocation(from: "Some Address") \{ coordinates in\cf4 \
+\cf13                         print(coordinates)  Print here\cf4 \
+\cf13                         self.location = coordinates  Assign to a local variable for further processing\cf4 \
+\cf13                     \}\cf4 \
+\cf13             \}\cf4 \
+\cf13         \}\cf4 \
+\
+\cf13         func getLocation(from address: String, completion: @escaping (_ location: CLLocationCoordinate2D?)-> Void) \{\cf4 \
+\cf13             let geocoder = CLGeocoder()\cf4 \
+\cf13             geocoder.geocodeAddressString(address) \{ (placemarks, error) in\cf4 \
+\cf13                 guard let placemarks = placemarks,\cf4 \
+\cf13                 let location = placemarks.first?.location?.coordinate else \{\cf4 \
+\cf13                     completion(nil)\cf4 \
+\cf13                     return\cf4 \
+\cf13                 \}\cf4 \
+\cf13                 completion(location)\cf4 \
+\cf13             \}\cf4 \
+\cf13         \}\cf4 \
+\cf13     \}\cf4 \
+    \
+    \
+\
+    \
+    \
+    \
+\cf13     public func resolveLocationName(with location: CLLocation, completion: @escaping ((String?) -> Void)) \{\cf4 \
+\cf13         let geocoder = CLGeocoder()\cf4 \
+\cf13         geocoder.reverseGeocodeLocation(location, preferredLocale: .current) \{ placemarks,\cf4 \
+\cf13             error in\cf4 \
+\cf13             guard let place = placemarks?.first, error == nil else \{\cf4 \
+\cf13                 completion(nil)\cf4 \
+\cf13                 return\cf4 \
+\cf13             \}\cf4 \
+\
+\cf13             print("- Full Place:            ", place)\cf4 \
+\cf13             print("- Name:                  ", place.name as Any)\cf4 \
+\cf13             print("- SubLocality:           ", place.subLocality as Any)\cf4 \
+\cf13             print("- Locality:              ", place.locality as Any)\cf4 \
+\cf13             print("- SubAdministrativeArea: ", place.subAdministrativeArea as Any)\cf4 \
+\cf13             print("- AdministrativeArea:    ", place.administrativeArea as Any)\cf4 \
+\cf13             print("- PostalCode:            ", place.postalCode as Any)\cf4 \
+\cf13             print("- Country:               ", place.country as Any)\cf4 \
+\cf13             print("- IsoCountryCode:        ", place.isoCountryCode as Any)\cf4 \
+\cf13             print("- TimeZone:              ", place.timeZone as Any)\cf4 \
+\cf13             print("- Location:              ", place.location as Any)\cf4 \
+\cf13             print("- Latitude:              ", location.coordinate.latitude)\cf4 \
+\cf13             print("- Longitude:             ", location.coordinate.longitude)\cf4 \
+\cf13             print("- AreasOfInterest:       ", place.areasOfInterest as Any)\cf4 \
+\cf13             print("- InlandWater:           ", place.inlandWater as Any)\cf4 \
+\cf13             print("- Ocean:                 ", place.ocean as Any)\cf4 \
+\cf13             print("- Region:                ", place.region as Any)\cf4 \
+\cf13             print("- Thoroughfare:          ", place.thoroughfare as Any)\cf4 \
+\cf13             print("- SubThoroughfare:       ", place.subThoroughfare as Any)\cf4 \
+\
+\cf13             var locationLabel = ""\cf4 \
+\
+\cf13             if let subLocality = place.subLocality \{\cf4 \
+\cf13                 locationLabel += "\\(subLocality), "\cf4 \
+\cf13             \}\cf4 \
+\cf13             if let locality = place.locality \{\cf4 \
+\cf13                 locationLabel += "\\(locality), "\cf4 \
+\cf13             \}\cf4 \
+\cf13             if let administrativeArea = place.administrativeArea \{\cf4 \
+\cf13                 locationLabel += "\\(administrativeArea), "\cf4 \
+\cf13             \}\cf4 \
+\cf13             if let country = place.country \{\cf4 \
+\cf13                 locationLabel += "\\(country)"\cf4 \
+\cf13             \}\cf4 \
+\cf13             completion(locationLabel)\cf4 \
+\cf13         \}\cf4 \
+\cf13     \}\cf4 \
+    \
+\cf13     print(place)\cf4 \
+    \
+    \
+\cf13 \}}
